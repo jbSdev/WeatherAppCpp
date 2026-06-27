@@ -77,18 +77,17 @@ pipeline {
             steps {
                 withCredentials([string(credentialsId: 'owm-api-key', variable: 'OWM_API_KEY')]) {
                     sh '''
-                        # Stop and remove old container if running
                         docker rm -f weather-api || true
 
                         docker run -d \
-                        --name weather-api \
-                        --restart unless-stopped \
-                        -p $APP_PORT:8080 \
-                        -e OWM_API_KEY=$OWM_API_KEY \
-                        weather-api:latest
+                            --name weather-api \
+                            --restart unless-stopped \
+                            -p $APP_PORT:8080 \
+                            -e OWM_API_KEY=$OWM_API_KEY \
+                            weather-api:latest
 
-                        echo "Deployed ${env.IMAGE_TAG} → http://localhost:${APP_PORT}"
-                        '''
+                        echo "Deployed → http://localhost:$APP_PORT"
+                    '''
                 }
             }
         }
@@ -100,10 +99,10 @@ pipeline {
                     STATUS=\$(curl -s -o /dev/null -w '%{http_code}' http://localhost:${APP_PORT}/health)
                     if [ "\$STATUS" != "200" ]; then
                         echo "Deployment verification failed!"
-                            exit 1
-                            fi
-                            echo "Service is up."
-                            """
+                        exit 1
+                    fi
+                    echo "Service is up."
+                """
             }
         }
     }
