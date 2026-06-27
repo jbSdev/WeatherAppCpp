@@ -94,15 +94,16 @@ pipeline {
 
         stage('Verify Deployment') {
             steps {
-                sh """
+                sh '''
                     sleep 3
-                    STATUS=\$(curl -s -o /dev/null -w '%{http_code}' http://localhost:${APP_PORT}/health)
+                    CONTAINER_IP=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' weather-api)
+                    STATUS=\$(curl -s --max-time 5 -o /dev/null -w '%{http_code}' http://$CONTAINER_IP:8080/health)
                     if [ "\$STATUS" != "200" ]; then
                         echo "Deployment verification failed!"
                         exit 1
                     fi
-                    echo "Service is up."
-                """
+                    echo "Service is up at http://$(hostname -I | awk '{print $1}):8090"
+                '''
             }
         }
     }
