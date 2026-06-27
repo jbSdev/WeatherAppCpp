@@ -4,7 +4,7 @@ pipeline {
         environment {
             IMAGE_NAME     = "weather-api"
             CONTAINER_NAME = "weather-api"
-            APP_PORT       = "8088"
+            APP_PORT       = "8090"
             // OWM_API_KEY is stored as a Jenkins Secret Text credential with id 'owm-api-key'
         }
 
