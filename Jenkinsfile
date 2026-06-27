@@ -49,7 +49,7 @@ pipeline {
                         sleep 8
 
                         # Check if containser is still running
-                        docker inspect -f '{{.State.Running}}' ${CONTAINER_NAME}-name || true
+                        docker inspect -f '{{.State.Running}}' ${CONTAINER_NAME}-test || true
 
                         # /health should return 200 regardless of API key
                         STATUS=\$(curl -s -o /dev/null -w '%{http_code}' http://localhost:18080/health)
