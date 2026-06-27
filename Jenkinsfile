@@ -39,9 +39,14 @@ pipeline {
                 script {
                     // Spin up a temporary container and hit /health
                     sh """
+                        # Find Jenkins' network
+                        JENKINS_NETWORK=\$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.NetworkID}}{{end}}' jenkins | head -c 12)
+                        JENKINS_NETWORK_NAME=\$(docker inspect -f '{{range \$k, \$v := .NetworkSettings.Networks}}{{\$k}}{{end}}' jenkins)
+                        echo "Jenkins network: \$JENKINS_NETWORK_NAME"
+
                         docker run -d \
                         --name ${CONTAINER_NAME}-test \
-                        -p 18080:8080 \
+                        --network \$JENKINS_NETWORK_NAME \
                         -e OWM_API_KEY=dummy_smoke_test \
                         ${env.IMAGE_TAG}
 
