@@ -77,11 +77,13 @@ pipeline {
             steps {
                 withCredentials([string(credentialsId: 'owm-api-key', variable: 'OWM_API_KEY')]) {
                     sh '''
-                        docker rm -f weather-api || true
+                        JENKINS_NETWORK=$(docker inspect -f '{{range $k, $v := .NetworkSettings.Networks}}{{$k}}{{end}}' jenkins)
 
+                        docker rm -f weather-api || true
                         docker run -d \
                             --name weather-api \
                             --restart unless-stopped \
+                            --network $JENKINS_NETWORK \
                             -p $APP_PORT:8080 \
                             -e OWM_API_KEY=$OWM_API_KEY \
                             weather-api:latest
