@@ -1,7 +1,7 @@
 # Build
 FROM debian:bookworm-slim AS builder
 
-RUN apt-get update && apt-ge install -y --no-install-recommends \
+RUN apt-get update && apt-get install -y --no-install-recommends \
   build-essential \
   cmake \
   git \
