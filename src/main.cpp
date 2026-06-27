@@ -18,7 +18,7 @@ std::string fetchWeather(const std::string& apiKey)
     CURL* curl = curl_easy_init();
     if (!curl) return R"({"error":"Failed to init curl"})";
 
-    std::string url = "https://api.openweatherap.org/data/2.5/weather"
+    std::string url = "https://api.openweathermap.org/data/2.5/weather"
                       "?q=Warsaw,PL&appid=" + apiKey + "&units=metric";
     std::string response;
 
@@ -53,13 +53,13 @@ int main()
         try {
             auto data = json::parse(raw);
             json result = {
-                {"city",        data["city"]},
-                {"country",     data["country"]},
-                {"temperature", data["temperature"]},
-                {"feels_like",  data["feels_like"]},
-                {"humidity",    data["humidity"]},
-                {"description", data["description"]},
-                {"wind_speed",  data["wind_speed"]}
+                {"city",        data["name"]},
+                {"country",     data["sys"]["country"]},
+                {"temperature", data["main"]["temp"]},
+                {"feels_like",  data["main"]["feels_like"]},
+                {"humidity",    data["main"]["humidity"]},
+                {"description", data["weather"][0]["description"]},
+                {"wind_speed",  data["wind"]["speed"]}
             };
 
             crow::response resp(200, result.dump(2));
