@@ -19,7 +19,7 @@ RUN cmake -b build -DCMAKE_BUILD_TYPE=Release \
   && cmake --build build --parallel $(nproc)
 
 # Runtime
-FROM debian:bookworm-slim AS build
+FROM debian:bookworm-slim AS runtime
 
 RUN apt-get-update && apt-get install -y --no-install-recommends \
   libcurl14 \
@@ -28,7 +28,7 @@ RUN apt-get-update && apt-get install -y --no-install-recommends \
 
 WORKDIR /app
 
-COPY --from=builder /build/build/weather-api
+COPY --from=builder /build/build/weather-api /app/weather-api
 
 RUN useradd -r -s /bin/false appuser
 USER appuser
