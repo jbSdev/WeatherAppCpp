@@ -15,7 +15,7 @@ WORKDIR /build
 COPY CMakeLists.txt .
 COPY src/ src/
 
-RUN cmake -b build -DCMAKE_BUILD_TYPE=Release \
+RUN cmake -B build -DCMAKE_BUILD_TYPE=Release \
   && cmake --build build --parallel $(nproc)
 
 # Runtime
