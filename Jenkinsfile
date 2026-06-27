@@ -83,7 +83,7 @@ pipeline {
                         docker run -d \
                         --name weather-api \
                         --restart unless-stopped \
-                        -p 8088:8080 \
+                        -p $APP_PORT:8080 \
                         -e OWM_API_KEY=$OWM_API_KEY \
                         weather-api:latest
 
