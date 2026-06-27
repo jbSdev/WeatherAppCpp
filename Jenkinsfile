@@ -47,12 +47,15 @@ pipeline {
 
                         # Give it a moment to start
                         sleep 8
+
+                        echo "=== Container Logs ==="
+                        docker logs ${CONTAINER_NAME}-test || true
                         
                         CONTAINER_IP=\$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' ${CONTAINER_NAME}-test)
                         echo "Container IP: \$CONTAINER_IP"
 
                         # /health should return 200 regardless of API key
-                        STATUS=\$(curl -s -L -o /dev/null -w '%{http_code}' http://\$CONTAINER_IP:8080/health)
+                        STATUS=\$(curl -s -L --max-time 5 -o /dev/null -w '%{http_code}' http://\$CONTAINER_IP:8080/health)
                         docker rm -f ${CONTAINER_NAME}-test
 
                         if [ "\$STATUS" != "200" ]; then
