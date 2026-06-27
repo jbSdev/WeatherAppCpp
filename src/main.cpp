@@ -73,7 +73,7 @@ int main()
         }
     });
 
-    CROW_ROUTE(app, "/health")([]{
+    CROW_ROUTE(app, "/health")([] {
         crow::response resp(200, R"({"status":"ok"})");
         resp.add_header("Content-Type", "application/json");
         return resp;
