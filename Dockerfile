@@ -5,7 +5,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   build-essential \
   cmake \
   git \
-  libcurl14-openssl-dev \
+  libcurl4-openssl-dev \
   libssl-dev \
   ca-certificates \
   && rm -rf /var/lib/apt/lists/*
@@ -22,7 +22,7 @@ RUN cmake -b build -DCMAKE_BUILD_TYPE=Release \
 FROM debian:bookworm-slim AS runtime
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-  libcurl14 \
+  libcurl4 \
   ca-certificates \
   && rm -rf /var/lib/apt/lists/*
 
