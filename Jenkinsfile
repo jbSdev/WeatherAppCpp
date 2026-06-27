@@ -2,10 +2,10 @@ pipeline {
     agent any
 
         environment {
-            IMAGE_NAME    = "weather-api"
-                CONTAINER_NAME = "weather-api"
-                APP_PORT      = "8088"
-                // OWM_API_KEY is stored as a Jenkins Secret Text credential with id 'owm-api-key'
+            IMAGE_NAME     = "weather-api"
+            CONTAINER_NAME = "weather-api"
+            APP_PORT       = "8088"
+            // OWM_API_KEY is stored as a Jenkins Secret Text credential with id 'owm-api-key'
         }
 
     stages {
@@ -45,19 +45,22 @@ pipeline {
                         -e OWM_API_KEY=dummy_smoke_test \
                         ${env.IMAGE_TAG}
 
-# Give it a moment to start
-                    sleep 3
+                        # Give it a moment to start
+                        sleep 8
 
-# /health should return 200 regardless of API key
+                        # Check if containser is still running
+                        docker inspect -f '{{.State.Running}}' ${CONTAINER_NAME}-name || true
+
+                        # /health should return 200 regardless of API key
                         STATUS=\$(curl -s -o /dev/null -w '%{http_code}' http://localhost:18080/health)
                         docker rm -f ${CONTAINER_NAME}-test
 
                         if [ "\$STATUS" != "200" ]; then
                             echo "Health check failed with status \$STATUS"
-                                exit 1
-                                fi
-                                echo "Health check passed."
-                                """
+                            exit 1
+                        fi
+                        echo "Health check passed."
+                    """
                 }
             }
         }
