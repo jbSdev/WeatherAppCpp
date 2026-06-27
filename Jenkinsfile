@@ -76,19 +76,19 @@ pipeline {
         stage('Deploy') {
             steps {
                 withCredentials([string(credentialsId: 'owm-api-key', variable: 'OWM_API_KEY')]) {
-                    sh """
-# Stop and remove old container if running
-                        docker rm -f ${CONTAINER_NAME} || true
+                    sh '''
+                        # Stop and remove old container if running
+                        docker rm -f weather-api || true
 
                         docker run -d \
-                        --name ${CONTAINER_NAME} \
+                        --name weather-api \
                         --restart unless-stopped \
-                        -p ${APP_PORT}:8080 \
-                        -e OWM_API_KEY=${OWM_API_KEY} \
-                        ${env.IMAGE_TAG}
+                        -p 8088:8080 \
+                        -e OWM_API_KEY=$OWM_API_KEY \
+                        weather-api:latest
 
-                    echo "Deployed ${env.IMAGE_TAG} → http://localhost:${APP_PORT}"
-                        """
+                        echo "Deployed ${env.IMAGE_TAG} → http://localhost:${APP_PORT}"
+                        '''
                 }
             }
         }
