@@ -33,6 +33,6 @@ COPY --from=builder /build/build/weather-api
 RUN useradd -r -s /bin/false appuser
 USER appuser
 
-EXPOSE 8088
+EXPOSE 8080
 
 ENTRYPOINT ["./weather-api"]
