@@ -1,38 +1,17 @@
-# Build
-FROM debian:bookworm-slim AS builder
+services:
+    jenkins:
+        image: jenkins/jenkins:lts
+        container_name: jenkins
+        restart: unless-stopped
+        user: root
+        ports:
+          - "8088:8088"
+          - "50000:50000"
+        volumes:
+          - jenkins_home:/var/jenkins_home
+          - /var/run/docker.sock:/var/run/docker.sock
+        environment:
+          - JAVA_OPTS=-Djenkins.install.runSetupWizard=true
 
-RUN apt-get update && apt-ge install -y --no-install-recommends \
-  build-essential \
-  cmake \
-  git \
-  libcurl14-openssk-dev \
-  libssl-dev \
-  ca-certificates \
-  && rm -rf /var/lib/apt/lists/*
-
-WORKDIR /build
-
-COPY CMakeLists.txt .
-COPY src/ src/
-
-RUN cmake -b build -DCMAKE_BUILD_TYPE=Release \
-  && cmake --build build --parallel $(nproc)
-
-# Runtime
-FROM debian:bookworm-slim AS build
-
-RUN apt-get-update && apt-get install -y --no-install-recommends \
-  libcurl14 \
-  ca-certificates \
-  && rm -rf /var/lib/apt/lists/*
-
-WORKDIR /app
-
-COPY --from=builder /build/build/weather-api
-
-RUN useradd -r -s /bin/false appuser
-USER appuser
-
-EXPOSE 8088
-
-ENTRYPOINT ["./weather-api"]
+volumes:
+  jenkins_home:
