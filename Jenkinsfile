@@ -52,7 +52,7 @@ pipeline {
                         docker inspect -f '{{.State.Running}}' ${CONTAINER_NAME}-test || true
 
                         # /health should return 200 regardless of API key
-                        STATUS=\$(curl -s -o /dev/null -w '%{http_code}' http://localhost:18080/health)
+                        STATUS=\$(curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/health)
                         docker rm -f ${CONTAINER_NAME}-test
 
                         if [ "\$STATUS" != "200" ]; then
