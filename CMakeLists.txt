@@ -33,4 +33,4 @@ target_link_libraries( weather-api
         nlohmann_json::nlohmann_json
 )
 
-target_compile_options(weather-api PRIVATE -02 -Wall)
+target_compile_options(weather-api PRIVATE -O2 -Wall)
